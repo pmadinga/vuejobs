@@ -1,26 +1,31 @@
 <template>
-  <div>
-    <h1>Jobs</h1>
+
+  <h1>Jobs</h1>
+  <div v-if="jobs.length">
     <div v-for="(job, index) in jobs" class="job" :key="job.id">
       <router-link :to="{ name: 'jobdetails', params: { id: job.id}}">
         <h2>{{ job.title }}</h2>
       </router-link>
     </div>
   </div>
+  <div v-else>
+    <p>Loading jobs</p>
+  </div>
 </template>
 
 <script>
   export default{
-    
     data(){
       return{
         jobs: [
-          {title: 'Developer', id: 1, details: 'lorem'},
-          {title: 'Devops', id: 2, details: 'lorem'},
-          {title: 'SysOps', id: 3, details: 'lorem'},
-          {title: 'Designer', id: 4, details: 'lorem'},
         ]
       }
+    },
+    mounted(){
+      fetch("http://localhost:3000/jobs")
+        .then((res) => res.json())
+        .then(data => this.jobs = data)
+        .catch(err => console.log(err.message))
     }
   }
 
